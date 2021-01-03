@@ -1,10 +1,12 @@
+const { Router } = require("express");
 const Joi = require("joi");
-const express = require("express");
-const db = require("./database");
-const { string } = require("joi");
+const db = require("../database");
 
-const app = express();
-app.use(express.json());
+const router = Router();
+router.use((req, res, next) => {
+  console.log("Request made to /posts route");
+  next();
+});
 
 const validateUser = (user) => {
   const schema = Joi.object({
@@ -15,12 +17,12 @@ const validateUser = (user) => {
   return schema.validate(user);
 };
 
-app.get("/api/users", async (req, res) => {
+router.get("/", async (req, res) => {
   const results = await db.promise().query("SELECT * FROM users LIMIT 1000");
   res.send(results[0]);
 });
 
-app.get("/api/users/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const user = await db
     .promise()
     .query(`SELECT * FROM users WHERE id=${req.params.id}`);
@@ -30,7 +32,7 @@ app.get("/api/users/:id", async (req, res) => {
   res.send(user[0]);
 });
 
-app.post("/api/users", async (req, res) => {
+router.post("/", async (req, res) => {
   const { error } = validateUser(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -49,7 +51,4 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Listening on port: ${port}`);
-});
+module.exports = router;
