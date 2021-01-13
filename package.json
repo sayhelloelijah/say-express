@@ -4,7 +4,8 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "serve": "nodemon app.js"
+        "serve": "nodemon app.js",
+        "test": "jest"
     },
     "author": "",
     "license": "ISC",
@@ -12,5 +13,9 @@
         "express": "^4.17.1",
         "joi": "^17.3.0",
         "mysql2": "^2.2.5"
+    },
+    "devDependencies": {
+        "jest": "^26.6.3",
+        "puppeteer": "^5.5.0"
     }
 }
